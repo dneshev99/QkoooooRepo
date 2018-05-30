@@ -29,14 +29,29 @@ public class Item {
     @JoinColumn(name = "subcategory_id",nullable = false)
     private SubCategory subCategory;
 
-    public Item(String name, double basePricePerUnit, String description) {
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "user_id",nullable = false)
+    private User user;
+
+    public Item(String name, double basePricePerUnit, String description, SubCategory subCategory, User user) {
         this.name = name;
         this.basePricePerUnit = basePricePerUnit;
         this.description = description;
+        this.subCategory = subCategory;
+        this.user = user;
     }
 
     public Item() {}
 
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public String getName() {
         return name;

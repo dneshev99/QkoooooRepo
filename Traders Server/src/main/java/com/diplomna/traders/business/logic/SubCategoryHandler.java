@@ -32,6 +32,7 @@ public class SubCategoryHandler {
                 Category category = categoryRepository.findByName(subCategoryDTO.getMainCategory());
 
                 newEntry.setCategory(category);
+                newEntry.setUnit(subCategoryDTO.getUnit());
 
                 if (category != null) {
                     result.add(subCategoryRepository.save(newEntry).getId());

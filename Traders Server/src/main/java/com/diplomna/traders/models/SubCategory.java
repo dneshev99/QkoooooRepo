@@ -12,6 +12,7 @@ public class SubCategory {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    private String unit;
     private String name;
 
     @JsonIgnore
@@ -19,7 +20,7 @@ public class SubCategory {
     @JoinColumn(name = "category_id",nullable = false)
     private Category category;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sub_category",fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "subCategory",fetch = FetchType.EAGER)
     private List<Item> items = new ArrayList<>();
 
     public SubCategory(String name, Category category) {
@@ -48,5 +49,21 @@ public class SubCategory {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Item> items) {
+        this.items = items;
     }
 }

@@ -5,16 +5,26 @@ public class ItemDTO {
     private String name;
     private String description;
     private double basePricePerUnit;
-    private Long unit;
-
-    public ItemDTO(String name, String description, double basePricePerUnit, Long unit) {
-        this.name = name;
-        this.description = description;
-        this.basePricePerUnit = basePricePerUnit;
-        this.unit = unit;
-    }
+    private String user;
+    private String category;
 
     public ItemDTO() { }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
 
     public String getName() {
         return name;
@@ -22,10 +32,6 @@ public class ItemDTO {
 
     public double getBasePricePerUnit() {
         return basePricePerUnit;
-    }
-
-    public Long getUnit() {
-        return unit;
     }
 
     public String getDescription() {
@@ -44,7 +50,4 @@ public class ItemDTO {
         this.basePricePerUnit = basePricePerUnit;
     }
 
-    public void setUnit(Long unit) {
-        this.unit = unit;
-    }
 }
