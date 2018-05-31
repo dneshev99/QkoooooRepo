@@ -1,7 +1,9 @@
 package com.diplomna.traders.controllers;
 
 import com.diplomna.traders.business.logic.SubCategoryHandler;
+import com.diplomna.traders.dtos.ErrorDTO;
 import com.diplomna.traders.dtos.SubCategoryDTO;
+import com.diplomna.traders.exceptions.CategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -22,8 +24,15 @@ public class SubCategoryController {
     }
 
     @RequestMapping(value = "/create",method = RequestMethod.POST)
-    public ResponseEntity createSubCategories(@RequestBody List<SubCategoryDTO> subCategoryDTOS) {
-        return ResponseEntity.ok(subCategoryHandler.crateSubCategories(subCategoryDTOS));
+    public ResponseEntity createSubCategories(@RequestBody SubCategoryDTO subCategoryDTO) {
+        try {
+            return ResponseEntity.ok(subCategoryHandler.crateSubCategories(subCategoryDTO));
+        } catch (CategoryNotFoundException e) {
+            ErrorDTO error = new ErrorDTO();
+            error.setMessage(e.getMessage());
+
+            return ResponseEntity.badRequest().body(error);
+        }
     }
 
 }

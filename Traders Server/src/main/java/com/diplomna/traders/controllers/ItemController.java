@@ -1,7 +1,11 @@
 package com.diplomna.traders.controllers;
 
+import com.diplomna.traders.dtos.ErrorDTO;
 import com.diplomna.traders.dtos.ItemDTO;
 import com.diplomna.traders.business.logic.ItemHandler;
+import com.diplomna.traders.exceptions.AbstractRestException;
+import com.diplomna.traders.exceptions.SubCategoryNotFoundException;
+import com.diplomna.traders.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,17 +25,24 @@ public class ItemController {
     private ItemHandler itemHandler;
 
     @RequestMapping("/create")
-    public ResponseEntity<List<ItemDTO>> createItem(@RequestBody List<ItemDTO> itemDTO){
+    public ResponseEntity createItem(@RequestBody ItemDTO itemDTO){
 
-        itemHandler.createNewItem(itemDTO);
+        try {
+            itemHandler.createNewItem(itemDTO);
+        } catch (AbstractRestException e) {
+            ErrorDTO error = new ErrorDTO();
+            error.setMessage(e.getMessage());
+
+            return ResponseEntity.badRequest().body(error);
+        }
 
         return ResponseEntity.ok(itemDTO);
     }
     
     @RequestMapping(value = "/getAll", method = GET)
-    public ResponseEntity<Iterable<ItemDTO>> getAllItems(){
+    public ResponseEntity getAllItems(){
         List<ItemDTO> objects = itemHandler.getAllItems();
         
-        return new ResponseEntity(objects, HttpStatus.OK);
+        return ResponseEntity.ok(objects);
     }
 }

@@ -2,6 +2,7 @@ package com.diplomna.traders.business.logic;
 
 import com.diplomna.traders.dtos.CategoryDTO;
 import com.diplomna.traders.dtos.SubCategoryDTO;
+import com.diplomna.traders.exceptions.CategoryNotFoundException;
 import com.diplomna.traders.models.Category;
 import com.diplomna.traders.models.SubCategory;
 import com.diplomna.traders.repository.CategoryRepository;
@@ -20,28 +21,28 @@ public class SubCategoryHandler {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public List<Long> crateSubCategories(List<SubCategoryDTO> dtos) {
-        List<Long> result = new ArrayList<>();
+    public Long crateSubCategories(SubCategoryDTO subCategoryDTO) throws CategoryNotFoundException {
+        Long result = null;
 
-        if(dtos != null) {
-            for (SubCategoryDTO subCategoryDTO : dtos) {
-                SubCategory newEntry = new SubCategory();
+        if (subCategoryDTO != null) {
 
-                newEntry.setName(subCategoryDTO.getName());
+            SubCategory newEntry = new SubCategory();
 
-                Category category = categoryRepository.findByName(subCategoryDTO.getMainCategory());
+            newEntry.setName(subCategoryDTO.getName());
 
-                newEntry.setCategory(category);
-                newEntry.setUnit(subCategoryDTO.getUnit());
+            Category category = categoryRepository.findByName(subCategoryDTO.getMainCategory());
 
-                if (category != null) {
-                    result.add(subCategoryRepository.save(newEntry).getId());
-                }
-            }
+            if (category == null)
+                throw new CategoryNotFoundException("Invalid category");
+
+            newEntry.setCategory(category);
+            newEntry.setUnit(subCategoryDTO.getUnit());
+
         }
 
+
         return result;
-    }
+}
 
     public List<SubCategory> getAllSubCategories() {
         return (List<SubCategory>) subCategoryRepository.findAll();

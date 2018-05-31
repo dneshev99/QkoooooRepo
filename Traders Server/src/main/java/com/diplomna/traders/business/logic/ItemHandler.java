@@ -1,6 +1,8 @@
 package com.diplomna.traders.business.logic;
 
 import com.diplomna.traders.dtos.ItemDTO;
+import com.diplomna.traders.exceptions.SubCategoryNotFoundException;
+import com.diplomna.traders.exceptions.UserNotFoundException;
 import com.diplomna.traders.models.Item;
 import com.diplomna.traders.models.SubCategory;
 import com.diplomna.traders.models.User;
@@ -25,15 +27,20 @@ public class ItemHandler {
     @Autowired
     private SubCategoryRepository subCategoryRepository;
 
-    public List<Long> createNewItem(List<ItemDTO> newItems){
+    public Long createNewItem(ItemDTO newItem) throws UserNotFoundException, SubCategoryNotFoundException {
 
-        List<Long> result = new ArrayList<>();
+        Long result = null;
 
-        if(newItems != null) {
-            for (ItemDTO newItem:newItems) {
+        if(newItem != null) {
 
                 User user = userRepository.findByUsername(newItem.getUser());
                 SubCategory subCategory = subCategoryRepository.findByName(newItem.getCategory());
+
+                if (user == null)
+                    throw new UserNotFoundException("Invalid user");
+
+                if (subCategory == null)
+                    throw new SubCategoryNotFoundException("Invalid SubCategory");
 
                 Item item = new Item();
                 item.setName(newItem.getName());
@@ -42,8 +49,8 @@ public class ItemHandler {
                 item.setUser(user);
                 item.setSubCategory(subCategory);
 
-                result.add(itemRepository.save(item).getId());
-            }
+                result = itemRepository.save(item).getId();
+
         }
         return result;
     }
