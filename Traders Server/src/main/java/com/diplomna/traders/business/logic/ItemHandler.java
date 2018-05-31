@@ -12,7 +12,6 @@ import com.diplomna.traders.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -34,13 +33,15 @@ public class ItemHandler {
         if(newItem != null) {
 
                 User user = userRepository.findByUsername(newItem.getUser());
-                SubCategory subCategory = subCategoryRepository.findByName(newItem.getCategory());
+                SubCategory subCategory = subCategoryRepository.findByName(newItem.getSubCategory());
 
                 if (user == null)
                     throw new UserNotFoundException("Invalid user");
 
-                if (subCategory == null)
+
+                if (subCategory == null) {
                     throw new SubCategoryNotFoundException("Invalid SubCategory");
+                }
 
                 Item item = new Item();
                 item.setName(newItem.getName());
@@ -61,5 +62,23 @@ public class ItemHandler {
     
     public Item getItemByID(Long id){
         return itemRepository.findOne(id);
+    }
+
+    public List<Item> getItemsByUser(String username) throws UserNotFoundException {
+        User user = userRepository.findByUsername(username);
+
+        if (user == null)
+            throw new UserNotFoundException("Invalid user");
+
+        return itemRepository.findAllByUser(user);
+    }
+
+    public List<Item> getAllBySubCategory(String subCategoryName) throws SubCategoryNotFoundException {
+        SubCategory subCategory = subCategoryRepository.findByName(subCategoryName);
+
+        if (subCategory == null)
+            throw new SubCategoryNotFoundException("Invalid subCategory");
+
+        return subCategory.getItems();
     }
 }

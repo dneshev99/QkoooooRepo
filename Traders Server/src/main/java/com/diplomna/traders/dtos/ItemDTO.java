@@ -6,16 +6,16 @@ public class ItemDTO {
     private String description;
     private double basePricePerUnit;
     private String user;
-    private String category;
+    private String subCategory;
 
     public ItemDTO() { }
 
-    public String getCategory() {
-        return category;
+    public String getSubCategory() {
+        return subCategory;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setSubCategory(String subCategory) {
+        this.subCategory = subCategory;
     }
 
     public String getUser() {
