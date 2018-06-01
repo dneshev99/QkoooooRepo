@@ -51,11 +51,12 @@ public class SubCategoriesActivity extends AppCompatActivity {
 
         API service = retrofit.create(API.class);
 
-        service.getAllSubCategoriesByCategory((String) intent.getExtras().get("name")).enqueue(new Callback<List<SubCategoryDTO>>() {
+        service.getAllSubCategoriesByCategory(intent.getStringExtra("name")).enqueue(new Callback<List<SubCategoryDTO>>() {
             @Override
             public void onResponse(Call<List<SubCategoryDTO>> call, Response<List<SubCategoryDTO>> response) {
 
                 if (response.isSuccessful()) {
+
                     categoryListView.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.INVISIBLE);
                     final SubCategoryAdapter adapterSubCategories = new SubCategoryAdapter(getApplicationContext(), response.body());
@@ -66,16 +67,23 @@ public class SubCategoriesActivity extends AppCompatActivity {
                     categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            Toast.makeText(getApplicationContext(), adapterSubCategories.getData().get(i).getName(), Toast.LENGTH_SHORT).show();
+                            Intent startActivity = new Intent( SubCategoriesActivity.this,ItemListingActivity.class);
+                            startActivity.putExtra("name",adapterSubCategories.getData().get(i).getName());
+                            startActivity.putExtra("unit",adapterSubCategories.getData().get(i).getUnit());
+
+                            startActivity(startActivity);
                         }
                     });
 
+                } else {
+                    Toast.makeText(getApplicationContext(), "Error occurred" , Toast.LENGTH_SHORT).show();
+                    Log.d("Error",response.message());
                 }
             }
 
             @Override
             public void onFailure(Call<List<SubCategoryDTO>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),t.getMessage(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"Error occurred",Toast.LENGTH_SHORT).show();
                 Log.v(this.getClass().getSimpleName(), "error:" + t.getMessage());
             }
         });
